@@ -22,28 +22,36 @@ class TopPerfil extends Component {
             this.file = ref;
         }
     }
+    // Função para deixar a profilePic preto e branca quando o mouse passar
+    // sobre ela
     mouseEnter = (e) => {
+        // Condição para caso seja a capa do perfil
         if (e.target.id === 'cover') {
             this.setState({ displayCover: 1 })
             this.setState({ displayPic: 0 })
         }
+        // Condição para caso seja a foto do perfil
         if (e.target.id === 'pic') {
             this.setState({ displayPic: 1 })
             this.setState({ displayCover: 0 })
         }
     }
+    // Função que retira o preto e branco quando o mouse sai das fotos
     mouseLeave = (e) => {
         this.setState({ displayCover: 0 })
         this.setState({ displayPic: 0 })
     }
 
-
+    // Envia a foto pora o banco de dados
     handleSubmit = (e) => {
+        // Pega o uid do usuário atual
         const { auth } = this.props
         e.preventDefault();
-        // console.log(this.state)
+        // Guarda o arquivo enviado na variável file
         const file = this.file.files[0]
+        // Variavel que é ativada pra evitar novos clicks no botão depois do envio
         this.setState({ clicked: true })
+        // conecta no ao firebase
         const storageRef = fbConfig.storage().ref()
         const blob = file.slice(0, file.size, 'image/png');
         const newFile = new File([blob], `${'cover_' + auth.uid}`, { type: 'image/png' });
@@ -84,9 +92,15 @@ class TopPerfil extends Component {
 
 
     render() {
-        const { profile, auth } = this.props;
-        const profilePic = profile.profilePic
-        const cover = profile.coverPic
+        const { auth, photo, profile } = this.props;
+        let profilePic = ''
+        let coverPic = ''
+        try {
+            profilePic = photo.profilePic
+            coverPic = photo.coverPic
+        } catch (e) {
+            console.log("loading...");
+        }
         const { fileName } = this.state;
         const loc = window.location.pathname
         loc.toString()
@@ -94,7 +108,7 @@ class TopPerfil extends Component {
         return (
             <div className="topPerfil">
                 <div className="shellTopPerfil">
-                    <div className="cover" style={{ background: `url(${this.state.file !== null ? this.state.file : cover ? cover : 'https://i.imgur.com/kYW5GdO.jpg'}) center/cover`, textDecoration: 'none', filter: `grayscale(${this.state.alert ? 1 : 0})` }}>
+                    <div className="cover" style={{ background: `url(${this.state.file !== null ? this.state.file : coverPic ? coverPic : 'https://miro.medium.com/max/1400/1*CsJ05WEGfunYMLGfsT2sXA.gif'}) center/cover`, textDecoration: 'none', filter: `grayscale(${this.state.alert ? 1 : 0})` }}>
                         <div className="changePhotoText" style={{ position: 'absolute', top: 10, right: 20, display: 'flex', textDecoration: 'none', justifyContent: 'center', alignItems: 'center' }}>
                             <span style={this.state.displayCover === 0 ? { display: 'none' } : { opacity: this.state.displayCover, marginRight: 20, marginBottom: 8 }}>Trocar a imagem da capa</span>
                             <label for="file" className="fas fa-camera" style={{ fontSize: '18pt', marginBottom: '10px', cursor: 'pointer' }} id="cover" onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}></label>
@@ -107,8 +121,8 @@ class TopPerfil extends Component {
                                 ref={this.setRef}
                             />
                         </div>
-                        <h2 className="tituloProfile">{this.props.nome}</h2>
-                        <Link to={"/profilepic/" + auth.uid} className="profilePic" style={{ background: `url(${profilePic ? profilePic : 'https://i.imgur.com/bmcT4FI.png'}) center/cover`, textDecoration: 'none', filter: 'grayscale(0) !important' }} id="pic" onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
+                        <h2 className="tituloProfile">{profile.firstName} {profile.lastName}</h2>
+                        <Link to={"/profilepic/" + auth.uid} className="profilePic" style={{ background: `url(${profilePic ? profilePic : 'https://miro.medium.com/max/1400/1*CsJ05WEGfunYMLGfsT2sXA.gif'}) center/cover`, textDecoration: 'none', filter: 'grayscale(0) !important' }} id="pic" onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
                             <div className="changePhotoText" style={{ opacity: this.state.displayPic }}>
                                 <i className="fas fa-camera" style={{ fontSize: '38pt', marginBottom: '10px' }}></i>
                                 <span>Trocar a foto do perfil</span>
@@ -116,9 +130,9 @@ class TopPerfil extends Component {
                         </Link>
                     </div>
                     <span style={this.state.alert !== '' ? { marginLeft: 30, color: 'red', float: 'right', fontSize: '18pt', marginTop: 20 } : { marginLeft: 30, color: 'rgb(58, 62, 80)', float: 'right' }}>{this.state.alert !== '' ? this.state.alert : null}</span>
-                    <button className="btn-geral" style={this.state.file === null || this.state.alert !== '' || this.state.clicked === true ? { display: 'none' } : { display: 'flex', float: 'right' }} onClick={this.handleSubmit}>Atualizar capa</button>
+                    <button className="btn-geral" style={this.state.file === null || this.state.alert !== '' || this.state.clicked === true ? { display: 'none' } : { display: `${window.innerWidth < 600 ? '' : 'flex'}`, float: `${window.innerWidth < 600 ? 'none' : 'right'}`, marginTop: `${window.innerWidth < 600 ? '120px' : ''}`}} onClick={this.handleSubmit}>Atualizar capa</button>
                     <h2 className="tituloProfileResponsive">
-                        {this.props.nome}
+                        {profile.firstName} {profile.lastName}
                     </h2>
                 </div>
             </div>
@@ -137,9 +151,16 @@ const mapDispatchToProps = (dispatch) => {
 
 
 const mapStateToProps = (state) => {
+    const loc = window.location.pathname
+    loc.toString()
+    const uid = loc.substring(loc.length - 28, loc.length)
+    
+    const photos = state.firestore.data.photos
+    const photo = photos ? photos[uid] : null
     return {
         auth: state.firebase.auth,
-        profile: state.firebase.profile
+        profile: state.firebase.profile,
+        photo: photo
     }
 }
 
@@ -147,8 +168,6 @@ const mapStateToProps = (state) => {
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     firestoreConnect([
-        {
-            collection: 'users'
-        }
+        { collection: 'photos' }
     ])
 )(TopPerfil)

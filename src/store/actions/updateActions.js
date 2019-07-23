@@ -30,8 +30,8 @@ export const updateProject = (project, id) => {
 export const updateProfilePic = (url, uid) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
-        console.log(url)
-        firestore.collection('users').doc(uid).update({
+        console.log(firestore.collection('photos').doc(uid).profilePic)
+        firestore.collection('photos').doc(uid).update({
             profilePic: url
         }).then(() => {
             dispatch({ type: 'UPDATE_PROFILE_PIC', url });
@@ -45,7 +45,7 @@ export const updateCoverPic = (url, uid) => {
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
         console.log(url)
-        firestore.collection('users').doc(uid).update({
+        firestore.collection('photos').doc(uid).update({
             coverPic: url
         }).then(() => {
             dispatch({ type: 'UPDATE_COVER_PIC', url });

@@ -511,6 +511,7 @@ td {
   .tituloProfileResponsive {
     display: block;
     font-size: 25pt;
+    color: #253858;
   }
   .profilePic{
     left: auto;

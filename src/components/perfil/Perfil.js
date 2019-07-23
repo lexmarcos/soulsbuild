@@ -34,7 +34,6 @@ class Perfil extends Component {
         const loc = window.location.pathname
         loc.toString()
         const id = loc.substring(loc.length - 28, loc.length);
-        console.log(id)
         if (!auth.uid) return <Redirect to='/signin' />
         return (
             <div className="perfil container">

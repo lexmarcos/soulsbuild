@@ -30,7 +30,6 @@ class UploadProfilePic extends Component {
         const storageRef = fbConfig.storage().ref()
         const blob = file.slice(0, file.size, 'image/png');
         const newFile = new File([blob], auth.uid, { type: 'image/png' });
-        console.log(newFile.name)
         const mainImage = storageRef.child('images/' + auth.uid + '/' + newFile.name)
         mainImage.put(file).then((snapshot) => {
             mainImage.getDownloadURL().then((url) => {
@@ -67,9 +66,14 @@ class UploadProfilePic extends Component {
     };
 
     render() {
-        const { auth, profile } = this.props;
+        const { auth, photo } = this.props;
+        let profilePic = ''
+        try {
+            profilePic = photo.profilePic
+        } catch (e) {
+            console.log("loading...");
+        }
         const { fileName } = this.state;
-        const profilePic = profile.profilePic
         const loc = window.location.pathname
         loc.toString()
         const id = loc.substring(loc.length - 28, loc.length);
@@ -118,9 +122,16 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 const mapStateToProps = (state) => {
+    const loc = window.location.pathname
+    loc.toString()
+    const uid = loc.substring(loc.length - 28, loc.length)
+    
+    const photos = state.firestore.data.photos
+    const photo = photos ? photos[uid] : null
     return {
         auth: state.firebase.auth,
-        profile: state.firebase.profile
+        profile: state.firebase.profile,
+        photo: photo
     }
 }
 
@@ -130,6 +141,7 @@ export default compose(
     firestoreConnect([
         {
             collection: 'users'
-        }
+        },
+        { collection: 'photos' }
     ])
 )(UploadProfilePic)
