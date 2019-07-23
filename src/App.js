@@ -1,0 +1,39 @@
+import React from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import Navbar from './components/layout/Navbar';
+import Dashboard from './components/dashboard/Dashboard';
+import ProjectDetails from './components/projects/ProjectDetails';
+import SignIn from './components/auth/SignIn';
+import SignUp from './components/auth/SingUp';
+import CreateProject from './components/projects/CreateProject';
+import mostLikebled from './components/dashboard/mostLikebled';
+import Home from './components/home/home';
+import EmailVerifiedBar from './components/layout/EmailVerifiedBar';
+import Perfil from './components/perfil/Perfil';
+import UploadPhotos from './components/perfil/UploadPhotos';
+
+
+function App() {
+  
+  return (
+    <BrowserRouter>
+      <div className="App">
+          <Navbar/>
+          <EmailVerifiedBar/>
+            <Switch>
+              <Route exact path="/" component={Home}/>
+              <Route path="/feed" component={Dashboard}/>
+              <Route path="/project/:id" component={ProjectDetails}/>
+              <Route path="/signin" component={SignIn}/>
+              <Route path="/signup" component={SignUp}/>
+              <Route path="/melhores" component={mostLikebled}/>
+              <Route path="/create" component={CreateProject}/>
+              <Route path="/perfil/:uid" component={Perfil}/>
+              <Route path="/profilePic/:uid" component={UploadPhotos}/>
+            </Switch>
+        </div>
+    </BrowserRouter>
+  );
+}
+
+export default App;
