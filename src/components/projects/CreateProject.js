@@ -61,7 +61,7 @@ class CreateProject extends Component {
                         <h6 className="subTitulo">1° Insira o nome da sua build</h6>
                         <div className="input-field">
                             <label htmlFor="title">Nome da build</label>
-                            <input type="text" id="title" onChange={this.handleChange} onKeyDown={this.keyPressed}/>
+                            <input type="text" id="title" onChange={this.handleChange} disabled={this.props.auth.emailVerified ? false : true} onKeyDown={this.keyPressed}/>
                         </div>
                         <span className="red-text">{!this.props.auth.emailVerified ? "Você precisa verificar seu email para criar uma nova build" : null}</span>
                     </div>

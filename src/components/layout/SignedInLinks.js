@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { signOut } from '../../store/actions/authActions'
+import TopPerfil from '../perfil/TopPerfil'
 
 class SingnedInLinks extends Component {
     state = {
@@ -24,6 +25,9 @@ class SingnedInLinks extends Component {
             textDecoration: 'none'
         }
     }
+    reload(){
+        // console.log(TopPerfil.)
+    }
     
     render() {
         const location = window.location.pathname
@@ -34,7 +38,7 @@ class SingnedInLinks extends Component {
             <li><NavLink style={location !== "/" && location !== "/signin" && location !== "/signup" ? this.style.textWhite : this.style.textBlack} onClick={this.props.signOut} to="">Sair</NavLink></li>
             <li><NavLink style={location !== "/" && location !== "/signin" && location !== "/signup" ? this.style.textWhite : this.style.textBlack} to="/create">Nova build</NavLink></li>
             <li><NavLink style={location !== "/" && location !== "/signin" && location !== "/signup" ? this.style.textWhite : this.style.textBlack} to="/melhores">Melhores builds</NavLink></li>
-            <li><NavLink style={location !== "/" && location !== "/signin" && location !== "/signup" ? this.style.textWhite : this.style.textBlack} to={"/perfil/" + auth.uid}>
+            <li><NavLink style={location !== "/" && location !== "/signin" && location !== "/signup" ? this.style.textWhite : this.style.textBlack} onClick={this.reload} to={"/perfil/" + auth.uid}>
                 {this.props.profile.initials}
             </NavLink></li>
         </div>

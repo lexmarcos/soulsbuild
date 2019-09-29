@@ -11,6 +11,7 @@ import Home from './components/home/home';
 import EmailVerifiedBar from './components/layout/EmailVerifiedBar';
 import Perfil from './components/perfil/Perfil';
 import UploadPhotos from './components/perfil/UploadPhotos';
+import editPerfil from './components/perfil/editPerfil';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
               <Route path="/melhores" component={mostLikebled}/>
               <Route path="/create" component={CreateProject}/>
               <Route path="/perfil/:uid" component={Perfil}/>
+              <Route path="/editperfil/:uid" component={editPerfil}/>
               <Route path="/profilePic/:uid" component={UploadPhotos}/>
             </Switch>
         </div>

@@ -10,6 +10,7 @@ class TopPerfil extends Component {
     constructor() {
         super();
         this.state = {
+            key: 4,
             displayPic: 0,
             displayCover: 0,
             blur: 'blur(4px)',
@@ -66,6 +67,10 @@ class TopPerfil extends Component {
         this.props.updateCoverPic(this.state.coverURL);
     }
 
+    componentDidUpdate(){
+        console.log("aaaaaaaaa")
+    }
+
     onChange = e => {
 
         switch (e.target.name) {
@@ -89,27 +94,34 @@ class TopPerfil extends Component {
                 this.setState({ [e.target.name]: e.target.value });
         }
     };
-
+    
 
     render() {
-        const { auth, photo, profile } = this.props;
+        console.log(window.history.state)
+        const { auth, user } = this.props;
+        console.log(user)
         let profilePic = ''
         let coverPic = ''
+        let name = ''
         try {
-            profilePic = photo.profilePic
-            coverPic = photo.coverPic
+            name = user.firstName + " " + user.lastName
+            profilePic = user.profilePic
+            coverPic = user.coverPic
         } catch (e) {
             console.log("loading...");
         }
-        const { fileName } = this.state;
         const loc = window.location.pathname
         loc.toString()
+        console.log(this.props.nome)
         const id = loc.substring(loc.length - 28, loc.length);
         return (
             <div className="topPerfil">
                 <div className="shellTopPerfil">
-                    <div className="cover" style={{ background: `url(${this.state.file !== null ? this.state.file : coverPic ? coverPic : 'https://miro.medium.com/max/1400/1*CsJ05WEGfunYMLGfsT2sXA.gif'}) center/cover`, textDecoration: 'none', filter: `grayscale(${this.state.alert ? 1 : 0})` }}>
-                        <div className="changePhotoText" style={{ position: 'absolute', top: 10, right: 20, display: 'flex', textDecoration: 'none', justifyContent: 'center', alignItems: 'center' }}>
+                    <div className="cover" style={{ background: `url(${this.state.file !== null ? this.state.file : coverPic ? coverPic : 'https://i.imgur.com/t5yvOZ5.gif'}) center/cover`,
+                     textDecoration: 'none',
+                    backgroundSize: `${coverPic ? null : '200px'}`,backgroundRepeat: 'no-repeat',
+                    filter: `grayscale(${this.state.alert ? 1 : 0})` }}>
+                        {id === auth.uid ? <div className="changePhotoText" style={{ position: 'absolute', top: 10, right: 20, display: 'flex', textDecoration: 'none', justifyContent: 'center', alignItems: 'center' }}>
                             <span style={this.state.displayCover === 0 ? { display: 'none' } : { opacity: this.state.displayCover, marginRight: 20, marginBottom: 8 }}>Trocar a imagem da capa</span>
                             <label for="file" className="fas fa-camera" style={{ fontSize: '18pt', marginBottom: '10px', cursor: 'pointer' }} id="cover" onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}></label>
                             <input
@@ -120,25 +132,30 @@ class TopPerfil extends Component {
                                 accept="image/*"
                                 ref={this.setRef}
                             />
-                        </div>
-                        <h2 className="tituloProfile">{profile.firstName} {profile.lastName}</h2>
-                        <Link to={"/profilepic/" + auth.uid} className="profilePic" style={{ background: `url(${profilePic ? profilePic : 'https://miro.medium.com/max/1400/1*CsJ05WEGfunYMLGfsT2sXA.gif'}) center/cover`, textDecoration: 'none', filter: 'grayscale(0) !important' }} id="pic" onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
-                            <div className="changePhotoText" style={{ opacity: this.state.displayPic }}>
-                                <i className="fas fa-camera" style={{ fontSize: '38pt', marginBottom: '10px' }}></i>
-                                <span>Trocar a foto do perfil</span>
-                            </div>
-                        </Link>
+                        </div> : null}
+                        <h2 className="tituloProfile">{name}</h2>
+                        
+                            {id === auth.uid ?
+                            <Link to={"/profilepic/" + auth.uid} className="profilePic" style={{ background: `url(${profilePic ? profilePic : 'https://i.imgur.com/t5yvOZ5.gif'}) center/cover`, textDecoration: 'none', filter: 'grayscale(0) !important' }} id="pic" onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
+                                <div className="changePhotoText" style={{ opacity: this.state.displayPic }}>
+                                    <i className="fas fa-camera" style={{ fontSize: '38pt', marginBottom: '10px' }}></i>
+                                    <span>Trocar a foto do perfil</span>
+                                </div>
+                            </Link> : <div className="profilePicOtherUser" style={{ background: `url(${profilePic ? profilePic : 'https://i.imgur.com/t5yvOZ5.gif'}) center/cover`, textDecoration: 'none', filter: 'grayscale(0) !important' }} id="pic"/>}
+                        
                     </div>
                     <span style={this.state.alert !== '' ? { marginLeft: 30, color: 'red', float: 'right', fontSize: '18pt', marginTop: 20 } : { marginLeft: 30, color: 'rgb(58, 62, 80)', float: 'right' }}>{this.state.alert !== '' ? this.state.alert : null}</span>
-                    <button className="btn-geral" style={this.state.file === null || this.state.alert !== '' || this.state.clicked === true ? { display: 'none' } : { display: `${window.innerWidth < 600 ? '' : 'flex'}`, float: `${window.innerWidth < 600 ? 'none' : 'right'}`, marginTop: `${window.innerWidth < 600 ? '120px' : ''}`}} onClick={this.handleSubmit}>Atualizar capa</button>
+                    <button className="btn-geral" style={this.state.file === null || this.state.alert !== '' || this.state.clicked === true ? { display: 'none' } : { display: `${window.innerWidth < 600 ? '' : 'flex'}`, float: `${window.innerWidth < 600 ? 'none' : 'right'}`, marginTop: `${window.innerWidth < 600 ? '120px' : ''}` }} onClick={this.handleSubmit}>Atualizar capa</button>
                     <h2 className="tituloProfileResponsive">
-                        {profile.firstName} {profile.lastName}
+                        {name}
                     </h2>
                 </div>
             </div>
         );
     }
 }
+
+
 
 const mapDispatchToProps = (dispatch) => {
     const loc = window.location.pathname
@@ -154,13 +171,12 @@ const mapStateToProps = (state) => {
     const loc = window.location.pathname
     loc.toString()
     const uid = loc.substring(loc.length - 28, loc.length)
-    
-    const photos = state.firestore.data.photos
-    const photo = photos ? photos[uid] : null
+    const users = state.firestore.data.users
+    const user = users ? users[uid] : null
     return {
         auth: state.firebase.auth,
         profile: state.firebase.profile,
-        photo: photo
+        user: user
     }
 }
 
@@ -168,6 +184,6 @@ const mapStateToProps = (state) => {
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
     firestoreConnect([
-        { collection: 'photos' }
+        { collection: 'users' }
     ])
 )(TopPerfil)

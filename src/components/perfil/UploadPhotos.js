@@ -66,10 +66,10 @@ class UploadProfilePic extends Component {
     };
 
     render() {
-        const { auth, photo } = this.props;
+        const { auth, user } = this.props;
         let profilePic = ''
         try {
-            profilePic = photo.profilePic
+            profilePic = user.profilePic
         } catch (e) {
             console.log("loading...");
         }
@@ -125,13 +125,12 @@ const mapStateToProps = (state) => {
     const loc = window.location.pathname
     loc.toString()
     const uid = loc.substring(loc.length - 28, loc.length)
-    
-    const photos = state.firestore.data.photos
-    const photo = photos ? photos[uid] : null
+    const users = state.firestore.data.users
+    const user = users ? users[uid] : null
     return {
         auth: state.firebase.auth,
         profile: state.firebase.profile,
-        photo: photo
+        user: user
     }
 }
 
@@ -142,6 +141,5 @@ export default compose(
         {
             collection: 'users'
         },
-        { collection: 'photos' }
     ])
 )(UploadProfilePic)
