@@ -12,6 +12,7 @@ import EmailVerifiedBar from './components/layout/EmailVerifiedBar';
 import Perfil from './components/perfil/Perfil';
 import UploadPhotos from './components/perfil/UploadPhotos';
 import editPerfil from './components/perfil/editPerfil';
+import PerfilOtherUser from './components/perfil/perfilOtherUser';
 
 
 function App() {
@@ -29,9 +30,10 @@ function App() {
               <Route path="/signup" component={SignUp}/>
               <Route path="/melhores" component={mostLikebled}/>
               <Route path="/create" component={CreateProject}/>
-              <Route path="/perfil/:uid" component={Perfil}/>
+              <Route exact path="/perfil/:uid" render={() => Perfil} component={Perfil}/>
+              <Route exact path="/user/:uid" render={() => Perfil} component={PerfilOtherUser}/>
               <Route path="/editperfil/:uid" component={editPerfil}/>
-              <Route path="/profilePic/:uid" component={UploadPhotos}/>
+              <Route path="/profilePic/:uid" component={UploadPhotos} />
             </Switch>
         </div>
     </BrowserRouter>

@@ -47,7 +47,8 @@ export const signUp = (newUser) => {
                 lastName: newUser.lastName,
                 initials: newUser.firstName[0] + newUser.lastName[0],
                 profilePic: 'https://i.imgur.com/bmcT4FI.png',
-                coverPic: 'https://i.imgur.com/IonJrLp.jpg'
+                coverPic: 'https://i.imgur.com/IonJrLp.jpg',
+                isVerified: false
             }).then(() => {
                 const user = firebase.auth().currentUser;
                 user.sendEmailVerification().then(function () {

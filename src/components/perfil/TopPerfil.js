@@ -67,10 +67,6 @@ class TopPerfil extends Component {
         this.props.updateCoverPic(this.state.coverURL);
     }
 
-    componentDidUpdate(){
-        console.log("aaaaaaaaa")
-    }
-
     onChange = e => {
 
         switch (e.target.name) {
@@ -97,29 +93,30 @@ class TopPerfil extends Component {
     
 
     render() {
-        console.log(window.history.state)
         const { auth, user } = this.props;
-        console.log(user)
         let profilePic = ''
         let coverPic = ''
         let name = ''
+        let isVerified = ''
         try {
             name = user.firstName + " " + user.lastName
             profilePic = user.profilePic
             coverPic = user.coverPic
+            isVerified = user.isVerified
+            console.log(isVerified)
         } catch (e) {
             console.log("loading...");
         }
         const loc = window.location.pathname
         loc.toString()
-        console.log(this.props.nome)
+        console.log(this.user)
         const id = loc.substring(loc.length - 28, loc.length);
         return (
             <div className="topPerfil">
                 <div className="shellTopPerfil">
                     <div className="cover" style={{ background: `url(${this.state.file !== null ? this.state.file : coverPic ? coverPic : 'https://i.imgur.com/t5yvOZ5.gif'}) center/cover`,
                      textDecoration: 'none',
-                    backgroundSize: `${coverPic ? null : '200px'}`,backgroundRepeat: 'no-repeat',
+                    backgroundSize: `${this.state.file !== null ? null : coverPic ? null : '200px'}`,backgroundRepeat: 'no-repeat',
                     filter: `grayscale(${this.state.alert ? 1 : 0})` }}>
                         {id === auth.uid ? <div className="changePhotoText" style={{ position: 'absolute', top: 10, right: 20, display: 'flex', textDecoration: 'none', justifyContent: 'center', alignItems: 'center' }}>
                             <span style={this.state.displayCover === 0 ? { display: 'none' } : { opacity: this.state.displayCover, marginRight: 20, marginBottom: 8 }}>Trocar a imagem da capa</span>
@@ -133,7 +130,7 @@ class TopPerfil extends Component {
                                 ref={this.setRef}
                             />
                         </div> : null}
-                        <h2 className="tituloProfile">{name}</h2>
+                        <h2 className="tituloProfile">{name} <i class="material-icons verified-user" style={{color: "#4984d6", display: `${isVerified ? 'contents' : 'none'}`}}>verified_user</i></h2>
                         
                             {id === auth.uid ?
                             <Link to={"/profilepic/" + auth.uid} className="profilePic" style={{ background: `url(${profilePic ? profilePic : 'https://i.imgur.com/t5yvOZ5.gif'}) center/cover`, textDecoration: 'none', filter: 'grayscale(0) !important' }} id="pic" onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
@@ -147,7 +144,7 @@ class TopPerfil extends Component {
                     <span style={this.state.alert !== '' ? { marginLeft: 30, color: 'red', float: 'right', fontSize: '18pt', marginTop: 20 } : { marginLeft: 30, color: 'rgb(58, 62, 80)', float: 'right' }}>{this.state.alert !== '' ? this.state.alert : null}</span>
                     <button className="btn-geral" style={this.state.file === null || this.state.alert !== '' || this.state.clicked === true ? { display: 'none' } : { display: `${window.innerWidth < 600 ? '' : 'flex'}`, float: `${window.innerWidth < 600 ? 'none' : 'right'}`, marginTop: `${window.innerWidth < 600 ? '120px' : ''}` }} onClick={this.handleSubmit}>Atualizar capa</button>
                     <h2 className="tituloProfileResponsive">
-                        {name}
+                        {name} <i class="material-icons verified-user" style={{color: "#4984d6", display: `${isVerified ? 'contents' : 'none'}`}}>verified_user</i>
                     </h2>
                 </div>
             </div>

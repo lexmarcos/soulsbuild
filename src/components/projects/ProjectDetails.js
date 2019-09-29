@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { firestoreConnect } from 'react-redux-firebase'
 import { compose } from 'redux'
-import { Redirect } from 'react-router-dom';
+import { Redirect , Link} from 'react-router-dom';
 import { updateProject } from '../../store/actions/updateActions';
 import moment from 'moment'
-
 class ProjectDetails extends Component {
     state = {
         like: 1,
@@ -156,7 +155,7 @@ class ProjectDetails extends Component {
                             <p className="card-details">{project.content}</p>
                             <div className="card-details" >
                                 <h6 className="subTitulo" style={{ marginBottom: 10 }}>Informações:</h6>
-                                <p>Build criada por: {project.authorFirstName} {project.authorLastName}</p>
+                                <p>Autor: <Link to={"/user/" + project.authorId}>{project.authorFirstName} {project.authorLastName}</Link></p>
                                 <div>{moment(project.createdAt.toDate()).calendar()}</div>
 
                             </div>

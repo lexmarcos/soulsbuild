@@ -61,7 +61,7 @@ class Navbar extends Component {
                 return { background: '#FFF' }
             }
             if (!auth.isEmpty) {
-                return { backgroundImage: 'linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%', boxShadow: '0px 2px 14px #4f6a9257 !important' }
+                return { backgroundImage: 'linear-gradient(120deg, #d076ff 0%, #72b9ff 100%', boxShadow: '0px 2px 14px #4f6a9257 !important' }
             }
         }
         return (
